@@ -1,0 +1,31 @@
+@import 'styles/reset';
+
+.game {
+    position: relative;
+    width:auto;
+    height:auto;
+    display:inline-block;
+    #land-bash{
+        position: absolute;
+    }
+    #camera {
+        height: 600px;
+        width: 600px;
+        background: none;
+        z-index: 5;
+        position: absolute;
+        #outcamera {
+            top: 600px;
+            height: 1200px;
+            width: 600px;
+            position: absolute;
+            background: white;
+        }
+    }
+}
+
+#end-turn {
+    display: block;
+}
+
+
