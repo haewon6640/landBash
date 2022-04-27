@@ -3,7 +3,6 @@ const CONSTANTS = {
     MAX_POPULATION: 25
 }
 export default class Land {
-    
     constructor(id) {
         // this.adjTories = adjTories;
         // Later on
@@ -22,21 +21,24 @@ export default class Land {
     draw(ctx, x, y, width,height) {
         x = x + (width/2)-100;
         this.drawLand(ctx, x, y, width,height);
-        this.drawUnits(ctx, x+40, y, width,height);
+        this.drawUnits(ctx, x+45, y, width,height);
     }
     drawLand(ctx, x, y, width,height) {
         ctx.fillStyle = this.owner.colorStr;
         ctx.fillRect(x,y,200,height);
-        let barrackX = x + 40;
+        let barrackX = x + 45;
         // Units
         ctx.fillStyle = 'rgb(' + this.owner.color[0]*0.75 + ',' + this.owner.color[1]*0.75 + ',' + this.owner.color[2]*0.75 + ')';
-        ctx.fillRect(barrackX,y+25,120,120);
+        ctx.fillRect(barrackX,y+35,110,110);
         // Trait
         ctx.fillStyle = 'rgb(' + this.owner.color[0]*0.75 + ',' + this.owner.color[1]*0.75 + ',' + this.owner.color[2]*0.75 + ')';
-        ctx.fillRect(barrackX+10,y+155,30,30);
+        ctx.fillRect(barrackX+5,y+155,35,35);
         // Ability
         ctx.fillStyle = 'rgb(' + this.owner.color[0]*0.75 + ',' + this.owner.color[1]*0.75 + ',' + this.owner.color[2]*0.75 + ')';
-        ctx.fillRect(barrackX + 80,y+155,30,30);
+        ctx.fillRect(barrackX +70,y+155,35,35);
+        ctx.font = "25px Lato";
+        ctx.fillStyle = 'rgb(' + this.owner.color[0]*0.25 + ',' + this.owner.color[1]*0.25 + ',' + this.owner.color[2]*0.25 + ')';
+        ctx.fillText(`Area ${this.id+1}`, x+66, y+27, 80);
     }
 
     drawUnits(ctx, x, y, width,height) {
@@ -52,7 +54,7 @@ export default class Land {
                 }
             }
             if (this.soldiers[i]) {
-                this.soldiers[i].drawUnit(ctx,x+12,y+37, 12);
+                this.soldiers[i].drawUnit(ctx,x+12,y+47, 12);
             } else {
                 break;
             }

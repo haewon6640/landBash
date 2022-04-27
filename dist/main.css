@@ -57,28 +57,24 @@ table {
 
 .game {
   position: relative;
-  width: auto;
-  height: auto;
-  display: inline-block;
+  display: block;
 }
 .game #land-bash {
   position: absolute;
+  z-index: 1;
 }
 .game #camera {
   height: 600px;
   width: 600px;
   background: none;
-  z-index: 5;
+  z-index: -1;
   position: absolute;
 }
-.game #camera #outcamera {
+.game #outcamera {
   top: 600px;
   height: 1200px;
   width: 600px;
   position: absolute;
   background: white;
-}
-
-#end-turn {
-  display: block;
+  z-index: 2;
 }

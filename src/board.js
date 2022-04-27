@@ -12,11 +12,22 @@ export default class Board {
         return this.board[index];
     }
 
-    drawBoard(ctx, dimensions) {
+    drawBoard(currLocationId,ctx, dimensions) {
         let start = 0;
-        for (let i = 0; i < this.size; i++) {
-            this.board[i].draw(ctx, 200, start, dimensions.width, start + dimensions.height/this.size);
+        for (let i = currLocationId; i < currLocationId+3; i++) {
+            let index = (i+this.size) % this.size;
+            this.board[index].draw(ctx, 200, start, dimensions.width, start + dimensions.height/this.size);
             start += dimensions.height/this.size;
         }
+    }
+
+    game_over() {
+        let firstOwner = this.get(0).owner;
+        for (let i = 1; i < this.size; i++) {
+            if (this.get(i).owner != firstOwner) {
+                return false;
+            }
+        }
+        return true;
     }
 }

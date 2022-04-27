@@ -2,30 +2,31 @@
 
 .game {
     position: relative;
-    width:auto;
-    height:auto;
-    display:inline-block;
+    display:block;
     #land-bash{
         position: absolute;
+        z-index: 1;
+    
     }
     #camera {
         height: 600px;
         width: 600px;
         background: none;
-        z-index: 5;
+        z-index: -1;
         position: absolute;
-        #outcamera {
-            top: 600px;
-            height: 1200px;
-            width: 600px;
-            position: absolute;
-            background: white;
-        }
+    }
+    #outcamera {
+        top: 600px;
+        height: 1200px;
+        width: 600px;
+        position: absolute;
+        background: white;
+        z-index: 2;
     }
 }
 
-#end-turn {
-    display: block;
-}
+// #end-turn {
+//     display: block;
+// }
 
 
