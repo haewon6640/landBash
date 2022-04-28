@@ -55,9 +55,14 @@ table {
   border-spacing: 0;
 }
 
+html {
+  overflow: hidden;
+}
+
 .game {
   position: relative;
   display: block;
+  box-sizing: border-box;
 }
 .game #land-bash {
   position: absolute;

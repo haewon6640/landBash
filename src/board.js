@@ -6,13 +6,18 @@ export default class Board {
         for (let i = 0; i < size; i++) {
             this.board.push(new Land(i));
         }
+        this.prevDraw = {
+        }
     }
 
     get(index) {
         return this.board[index];
     }
 
-    drawBoard(currLocationId,ctx, dimensions) {
+    draw(currLocationId=this.prevDraw.currLocationId,ctx=this.prevDraw.ctx, dimensions=this.prevDraw.dimensions) {
+        this.prevDraw.currLocationId = currLocationId;
+        this.prevDraw.ctx = ctx;
+        this.prevDraw.dimensions = dimensions;
         let start = 0;
         for (let i = currLocationId; i < currLocationId+3; i++) {
             let index = (i+this.size) % this.size;

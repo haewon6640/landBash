@@ -4,6 +4,7 @@ import {HumanPlayer, ComputerPlayer} from "./player";
 const CONSTANTS = {
     BOARD_SIZE: 9
 }
+
 export default class LandBash {
     constructor(canvas) {
         this.canvas = canvas;
@@ -28,18 +29,39 @@ export default class LandBash {
 
     animate() {
         this.drawBackground();
+        this.drawArrow();
         //draw board
-        this.board.drawBoard(this.currLocationId, this.ctx,this.boardDim);
+        this.board.draw(this.currLocationId, this.ctx,this.boardDim);
     }
 
-    play() {
+    startingSequence() {
+        const game = document.querySelector(".game");
+        this.drawBackground();
+        this.ctx.fillStyle = "purple"
+        this.ctx.font = "bold 40px Arial";
+        this.ctx.fillText("LandBash", 200, 200);
+        this.ctx.fillStyle = "blue"
+        this.ctx.font = "bold 40px Arial";
+        this.ctx.fillText("Click anywhere to start", 75, 300);
+        var promise = new Promise((resolve, reject) => {
+            this.canvas.addEventListener('click', (event) => {
+                resolve(this);
+            });
+        });
+        return promise;
+    }
+    async play() {
         console.log(`current Player is ${this.currPlayerId}`)
-        this.animate();
-        this.players[this.currPlayerId]
-            .takeTurn(this.canvas,this.ctx,this.dimensions) 
-            .then((value)=> {
-                this.switchPlayer();
-                this.play();
+        await this.startingSequence()
+            .then((value)=>{
+                console.log(value)
+                this.animate();
+                this.players[this.currPlayerId]
+                .takeTurn(this.canvas,this.ctx,this.dimensions, this.board) 
+                .then((value)=> {
+                    this.switchPlayer();
+                    this.play();
+                })
             })
         if (this.board.game_over()) {
             this.play();
@@ -80,12 +102,11 @@ export default class LandBash {
     // Takes in +1 or -1 as argument for up or down
     move(dir) {
         this.currLocationId = (this.currLocationId-dir+CONSTANTS.BOARD_SIZE)%CONSTANTS.BOARD_SIZE;
-        this.board.drawBoard(this.currLocationId, this.ctx, this.boardDim);
+        this.board.draw(this.currLocationId, this.ctx, this.boardDim);
     }
     drawBackground() {
         this.ctx.fillStyle = "skyblue";
         this.ctx.fillRect(0, 0, this.dimensions.width,this.dimensions.height);
-        this.drawArrow();
     }
 
     drawArrow() {

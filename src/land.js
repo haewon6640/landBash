@@ -15,10 +15,16 @@ export default class Land {
         this.soldiers = [];
         for (let i = 0; i < this.starting_count; i++) {
             this.soldiers.push(new Warrior())
-        } 
+        }
+    }
+
+    addUnit(unit) {
+        this.soldiers.push(unit);
     }
 
     draw(ctx, x, y, width,height) {
+        ctx.clearRect(ctx,x,y,width,height);
+        ctx.beginPath();
         x = x + (width/2)-100;
         this.drawLand(ctx, x, y, width,height);
         this.drawUnits(ctx, x+45, y, width,height);
