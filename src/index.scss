@@ -11,14 +11,6 @@ html {
     #land-bash{
         position: absolute;
         z-index: 1;
-    
-    }
-    #camera {
-        height: 600px;
-        width: 600px;
-        background: none;
-        z-index: -1;
-        position: absolute;
     }
     #outcamera {
         top: 600px;
@@ -27,6 +19,19 @@ html {
         position: absolute;
         background: white;
         z-index: 2;
+    }
+    #land-form {
+        position :relative;
+        background: none;
+        font-size: 25px;
+        left:195px;
+        width: 200px;
+        top: 280px;
+        z-index: 3;
+        display: block;
+        #land-name {
+            width: 100%;
+        }
     }
 }
 

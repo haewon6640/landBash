@@ -1,4 +1,5 @@
 import Land from "./land";
+
 export default class Board {
     constructor(size) {
         this.size = size;

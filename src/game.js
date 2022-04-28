@@ -1,6 +1,5 @@
 import Board from "./board";
 import {HumanPlayer, ComputerPlayer} from "./player";
-
 const CONSTANTS = {
     BOARD_SIZE: 9
 }
@@ -30,39 +29,69 @@ export default class LandBash {
     animate() {
         this.drawBackground();
         this.drawArrow();
-        //draw board
         this.board.draw(this.currLocationId, this.ctx,this.boardDim);
+        //draw board
+        this.players[this.currPlayerId].drawTurn(this.ctx);
+        if (this.board.game_over()) {
+            return;
+        } else {
+            requestAnimationFrame(this.animate.bind(this));
+        }
     }
 
     startingSequence() {
         const game = document.querySelector(".game");
         this.drawBackground();
+        // Title
         this.ctx.fillStyle = "purple"
         this.ctx.font = "bold 40px Arial";
         this.ctx.fillText("LandBash", 200, 200);
-        this.ctx.fillStyle = "blue"
+        // // Instructions
+        this.ctx.font = "30px Arial"
+        this.ctx.fillText("What is the name of your kingdom?",70,250);
+        // Start
+        this.ctx.fillStyle = "purple"
         this.ctx.font = "bold 40px Arial";
-        this.ctx.fillText("Click anywhere to start", 75, 300);
+        this.ctx.fillText("Press enter to start", 130, 500);
+
+
         var promise = new Promise((resolve, reject) => {
-            this.canvas.addEventListener('click', (event) => {
-                resolve(this);
+            let game = document.querySelector(".game");
+            let form = document.getElementById("land-form");
+            let input = document.getElementById("land-name");
+
+            game.addEventListener('keydown',(event)=> {
+                if (event.keyCode === 13) {
+                    if (input.value.length === 0) {
+                        setTimeout(()=>alert("You must select a name"),10)
+                    } else {
+                        // attempts to refresh if not
+                        form.remove();
+                        resolve(input.value);
+                    }
+                }
             });
         });
         return promise;
     }
-    async play() {
-        console.log(`current Player is ${this.currPlayerId}`)
-        await this.startingSequence()
+
+    play() {
+        this.startingSequence()
             .then((value)=>{
-                console.log(value)
+                // Set name of player's country
+                this.players[0].lands[0].name = value;
                 this.animate();
-                this.players[this.currPlayerId]
-                .takeTurn(this.canvas,this.ctx,this.dimensions, this.board) 
-                .then((value)=> {
-                    this.switchPlayer();
-                    this.play();
-                })
-            })
+                this.playTurns();
+            });
+
+    }
+    playTurns() {
+        this.players[this.currPlayerId]
+        .takeTurn(this.canvas,this.ctx,this.dimensions, this.board) 
+        .then((value)=> {
+            this.switchPlayer();
+            this.playTurns();
+        })
         if (this.board.game_over()) {
             this.play();
             alert("game over!")
@@ -74,6 +103,7 @@ export default class LandBash {
     }
 
     registerEvents() {
+        this.players[0].registerEvents(this.canvas, this.ctx, 450, 45, this.board, this);
         this.registerArrow();
     }
 

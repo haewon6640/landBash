@@ -68,13 +68,6 @@ html {
   position: absolute;
   z-index: 1;
 }
-.game #camera {
-  height: 600px;
-  width: 600px;
-  background: none;
-  z-index: -1;
-  position: absolute;
-}
 .game #outcamera {
   top: 600px;
   height: 1200px;
@@ -82,4 +75,17 @@ html {
   position: absolute;
   background: white;
   z-index: 2;
+}
+.game #land-form {
+  position: relative;
+  background: none;
+  font-size: 25px;
+  left: 195px;
+  width: 200px;
+  top: 280px;
+  z-index: 3;
+  display: block;
+}
+.game #land-form #land-name {
+  width: 100%;
 }

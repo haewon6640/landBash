@@ -1,6 +1,7 @@
 import { Warrior }  from "./unit";
 const CONSTANTS = {
-    MAX_POPULATION: 25
+    MAX_POPULATION: 25,
+    INITIAL_ARMY_SIZE: 3
 }
 export default class Land {
     constructor(id) {
@@ -10,10 +11,10 @@ export default class Land {
         this.ability;
         this.id = id;
         this.owner;
-        this.starting_count = 3;
+        this.name = `Area ${this.id}`;
         // Could use hash map for faster lookup
         this.soldiers = [];
-        for (let i = 0; i < this.starting_count; i++) {
+        for (let i = 0; i < CONSTANTS.INITIAL_ARMY_SIZE; i++) {
             this.soldiers.push(new Warrior())
         }
     }
@@ -44,7 +45,9 @@ export default class Land {
         ctx.fillRect(barrackX +70,y+155,35,35);
         ctx.font = "25px Lato";
         ctx.fillStyle = 'rgb(' + this.owner.color[0]*0.25 + ',' + this.owner.color[1]*0.25 + ',' + this.owner.color[2]*0.25 + ')';
-        ctx.fillText(`Area ${this.id+1}`, x+66, y+27, 80);
+        
+        let textLength = Math.min(ctx.measureText(this.name).width,80);
+        ctx.fillText(this.name, x+(width/2)-(textLength/2), y+27, 80);
     }
 
     drawUnits(ctx, x, y, width,height) {

@@ -1,4 +1,5 @@
-import {Warrior, Ninja, Wizard, Supersoldier} from "./unit"
+import {Warrior, Ninja, Wizard, Supersoldier} from "./unit";
+import Battle from "./battle";
 export default class Player {
     constructor(land) {
         this.gold = 120;
@@ -42,18 +43,56 @@ export default class Player {
 
     handlePurchase(board,landNumber,unit,ctx) {
         let land = board.get((board.prevDraw.currLocationId + landNumber)%9);
+        
         if (!Object.is(land.owner,this)) {
             alert("You can't spawn units on land that you don't own!");
             return;
         }
         if (this.shop[unit].price > this.gold) {
-            alert(`Need: ${this.shop[unit].price}, Current Gold: ${this.gold}`);
+            setTimeout(()=>alert(`Need: ${this.shop[unit].price}, Current Gold: ${this.gold}`),50);
             return;
         }
-        console.log(`before: ${this.gold}`)
         this.gold -= this.shop[unit].price;
         land.addUnit(new this.shop[unit].instance(ctx));
-        console.log(`current gold: ${this.gold}`)
+    }
+    handleBattleOutcome(board, landNo1, landNo2, ctx) {
+        let land1 = board.get((board.prevDraw.currLocationId + landNo1)%9)     
+        let land2 = board.get((board.prevDraw.currLocationId + landNo2)%9) 
+        if (!Object.is(land1.owner,this)) {
+            setTimeout(()=> {
+                alert("You can't attack from land that you don't own!");
+            },5);
+            return;
+        }
+        let battle = new Battle(land1,land2);
+        if (battle.won()) {
+            console.log("you've won")
+            this.handleWin(land2);
+        } else {
+            this.handleLoss(land2);
+        }
+    }
+    handleWin(opposingLand) {
+        opposingLand.owner = this;
+        opposingLand.name = this.lands[0].name;
+        this.lands.push(opposingLand);
+        let i = 0;
+        let enemy = opposingLand.owner;
+        while ( i <  enemy.lands.length) {
+            if (opposingLand.id == enemy.lands[i]) {
+                enemy.lands = enemy.lands.splice(i)
+                break;
+            } else {
+                i++
+            }
+        }
+
+    }
+
+    handleLoss(land) {
+        setTimeout(()=> {
+            alert(`You've lost!`);
+        },5)
     }
     takeTurn(canvas,ctx,dimensions) {
         this.addGold();
@@ -156,7 +195,6 @@ export class HumanPlayer extends Player{
     takeTurn(canvas, ctx, dimensions, board) {
         super.takeTurn(...arguments);
         this.hoverShop(canvas,ctx,450, 45);
-        this.registerEvents(canvas, ctx, 450, 45,board);
 
         // End Turn Button
         // returns a promise that resolves on eventlistener
@@ -174,21 +212,24 @@ export class HumanPlayer extends Player{
         return promise;
     }
     
-    registerEvents(canvas, ctx, x, y,board) {
+    registerEvents(canvas, ctx, x, y,board,game) {
         let isDragging = false;
         let dragStart = [];
         let draggedUnit;
+        
+        let battleDrag = false;
+        let lands = [0,0];
         //create a new canvas
-        var newCanvas = document.createElement('canvas');
-        var context = newCanvas.getContext('2d');
-        //set dimensions
-        newCanvas.width = canvas.width;
-        newCanvas.height = canvas.height;
-        //apply the old canvas to the new one
-        context.drawImage(canvas, 0, 0);
-        newCanvas.style.zIndex = -1;
+        // var newCanvas = document.createElement('canvas');
+        // var context = newCanvas.getContext('2d');
+        // //set dimensions
+        // newCanvas.width = canvas.width;
+        // newCanvas.height = canvas.height;
+        // //apply the old canvas to the new one
+        // context.drawImage(canvas, 0, 0);
+        // newCanvas.style.zIndex = -1;
 
-        canvas.addEventListener('mousedown', (event)=> {
+        const mousedown = (event)=> {
             // tell the browser we're handling this mouse event
             event.preventDefault();
             event.stopPropagation();
@@ -217,40 +258,70 @@ export class HumanPlayer extends Player{
                     draggedUnit = "supersoldier";
                 }
             }
-        });
 
-        canvas.addEventListener('mousemove', (event)=> {
+            // If starting battle
+            if (pX >= 200 && pX <= 400 && pY >= 0 && pY <= 600) {
+                battleDrag = true;
+                pY = pY/600;
+                lands[0] = 0;
+                if (pY >= 0.333 && pY <= 0.666) {
+                    lands[0] = 1;
+                }
+                if (pY >= 0.333 && pY <= 0.666) {
+                    lands[0] = 2;
+                }
+            }
+        }
+        const mousemove = (event) => {
             if (isDragging) {
                 let pX = event.pageX;
                 let pY = event.pageY;
                 new this.shop[draggedUnit].instance(ctx).drawUnit(ctx, pX+23, pY+23, 23,1);
-                new this.shop[draggedUnit].instance(ctx).drawWeapon(ctx, pX+23, pY+23, 23);
+                new this.shop[draggedUnit].instance(ctx).drawWeapon(ctx, pX+23, pY+23, 23);   
             }
-        });
+        }
+        
 
-        canvas.addEventListener('mouseup',(event) => {
+        const mouseup = (event) => {
             event.preventDefault();
             event.stopPropagation();
-
-            isDragging = false;
             let pX = event.pageX;
             let pY = event.pageY;
-            // dropped onto a land
-            if (pX >= 200 && pX <= 400 && pY >= 0 && pY <= 600) {
-                pY = pY/600;
-                let landNumber = 0;
-                if (pY >= 0.333 && pY <= 0.666) {
-                    landNumber = 1;
+            if (isDragging) {
+                isDragging = false;
+                // dropped onto a land
+                if (pX >= 200 && pX <= 400 && pY >= 0 && pY <= 600) {
+                    pY = pY/600;
+                    let landNumber = 0;
+                    if (pY >= 0.333 && pY <= 0.666) {
+                        landNumber = 1;
+                    }
+                    if (pY >= 0.333 && pY <= 0.666) {
+                        landNumber = 2;
+                    }
+                    this.handlePurchase(board,landNumber,draggedUnit,ctx);
                 }
-                if (pY >= 0.333 && pY <= 0.666) {
-                    landNumber = 2;
-                }
-                this.handlePurchase(board,landNumber,draggedUnit,ctx);
             }
-            ctx.drawImage(newCanvas, 0,0);
-            this.drawTurn(ctx);
-            board.draw();
-        })
+            if (battleDrag) {
+                battleDrag = false;
+                if (pX >= 200 && pX <= 400 && pY >= 0 && pY <= 600) {
+                    pY = pY/600;
+                    lands[1] = 0;
+                    if (pY >= 0.333 && pY <= 0.666) {
+                        lands[1] = 1;
+                    }
+                    if (pY >= 0.333 && pY <= 0.666) {
+                        lands[1] = 2;
+                    }
+                    this.handleBattleOutcome(board,lands[0],lands[1], ctx);
+                }
+            }
+        }
+        canvas.addEventListener('mousedown', mousedown);
+
+        canvas.addEventListener('mousemove', mousemove);
+
+        canvas.addEventListener('mouseup',mouseup);
     }
 
 

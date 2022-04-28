@@ -1,7 +1,7 @@
 {
   "name": "landbash",
   "version": "1.0.0",
-  "description": "",
+  "description": "Land Bash Link to the similar game: https://www.kongregate.com/games/zigzagame/the-great-war-of-prefectures The player is dropped into a game of territorial disputes! This is a turn-based browser game where the goal of the game is to survive and conquer all lands. The player is able to choose multiple classes of fighters as well as being able to upgrade their units.  Battles are held in a real-time strategy style, where the players are able to move their minions as needed. (Not part of MVP)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,17 +16,17 @@
     "url": "git+https://github.com/haewon6640/landBash.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jerry Park",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/haewon6640/landBash/issues"
   },
-  
   "homepage": "https://github.com/haewon6640/landBash#readme",
   "dependencies": {
     "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
     "babel-loader": "^8.2.5",
+    "canvasinput": "^1.2.7",
     "core-js": "^3.22.2",
     "css-loader": "^6.7.1",
     "mini-css-extract-plugin": "^2.6.0",
@@ -35,5 +35,8 @@
     "sass-loader": "^12.6.0",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2"
+  },
+  "devDependencies": {
+    "webpack-node-externals": "^3.0.0"
   }
 }

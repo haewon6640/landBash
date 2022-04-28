@@ -1,8 +1,9 @@
 class Unit {
-    constructor(attack, hp, color) {
+    constructor(attack, defense, color) {
         this.attack = attack;
-        this.hp = hp;
+        this.defense = defense;
         this.color = color;
+        this.img = new Image();
     }
     drawUnit(ctx, centerX, centerY, radius) {
         ctx.beginPath();
@@ -32,7 +33,7 @@ class Unit {
 
 export class Warrior extends Unit {
     constructor() {
-        super(5,20,"skyblue");
+        super(4,8,"skyblue");
     }
 
     drawUnit(ctx, centerX, centerY, radius, ...opt) {
@@ -40,20 +41,18 @@ export class Warrior extends Unit {
         if (opt.length === 0) {
             this.drawWeapon(ctx, centerX, centerY, radius);
         }
-
+        
     }
     drawWeapon(ctx, centerX, centerY, radius) {
-        var img = new Image();
-        img.src = "./src/assets/woodBat.png";
-        img.onload = () => {
-            ctx.drawImage(img, centerX,centerY-10, radius*2, radius*2)
-        }
+        this.img.src = "./src/assets/woodBat.png";
+        ctx.drawImage(this.img, centerX,centerY-10, radius*2, radius*2)
+
     }
 }
 
 export class Ninja extends Unit {
     constructor() {
-        super(5,20,"black");
+        super(9,9,"black");
     }
 
     drawUnit(ctx, centerX, centerY, radius, ...opt) {
@@ -64,17 +63,15 @@ export class Ninja extends Unit {
 
     }
     drawWeapon(ctx, centerX, centerY, radius) {
-        var img = new Image();
-        img.src = "./src/assets/shuriken.png";
-        img.onload = () => {
-            ctx.drawImage(img, centerX,centerY-10, radius*2, radius*2)
-        }
+        this.img.src = "./src/assets/shuriken.png";
+        ctx.drawImage(this.img, centerX,centerY-10, radius*2, radius*2)
+        
     }
 }
 
 export class Wizard extends Unit {
     constructor() {
-        super(5,20,"red");
+        super(13,10,"red");
     }
 
     drawUnit(ctx, centerX, centerY, radius, ...opt) {
@@ -85,11 +82,9 @@ export class Wizard extends Unit {
 
     }
     drawWeapon(ctx, centerX, centerY, radius) {
-        var img = new Image();
-        img.src = "./src/assets/staff.png";
-        img.onload = () => {
-            ctx.drawImage(img, centerX,centerY-10, radius*2, radius*2)
-        }
+        this.img.src = "./src/assets/staff.png";
+        ctx.drawImage(this.img, centerX,centerY-10, radius*2, radius*2)
+    
     }
 }
 
@@ -98,14 +93,12 @@ export class Supersoldier extends Unit {
         var grd = ctx.createLinearGradient(0, 0, 250, 0);
         grd.addColorStop(0, "rgb(152, 0, 224)");
         grd.addColorStop(1, "white");
-        super(5,20,grd);
+        super(15,20,grd);
     }
 
     
     drawUnit(ctx, centerX, centerY, radius) {
-        
         super.drawUnit(ctx, centerX, centerY,radius);
-        this.drawWeapon(ctx, centerX, centerY);
     }
     drawWeapon(ctx, centerX, centerY) {
         // var img = new Image();
